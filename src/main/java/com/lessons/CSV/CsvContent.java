@@ -4,5 +4,4 @@ public interface CsvContent {
 
     public String toCSVFile();
 
-    public String toCSVFileHead();
 }
