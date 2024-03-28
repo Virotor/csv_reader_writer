@@ -7,5 +7,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CSVData {
+
+    /*
+    // Определяет необходимо ли включить все поля класса в файл
+    //
+     */
     boolean isAllField() default  false;
 }

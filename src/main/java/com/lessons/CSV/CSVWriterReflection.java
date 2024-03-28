@@ -38,11 +38,14 @@ public class CSVWriterReflection implements CSVWriter {
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e.getMessage());
-        } catch (InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
         }
     }
 
+    /**
+     *
+     * @param childClass класс, который явялется
+     * @return Возвращает поля классов, которые помечены @CSVField всех классов в иерархии наследования
+     */
     private List<Field> getFieldsForWrite(Class<?> childClass) {
         List<Class<?>> classes = new ArrayList<>(10);
         classes.add(childClass);
@@ -66,6 +69,11 @@ public class CSVWriterReflection implements CSVWriter {
         return data.iterator().next().getClass();
     }
 
+    /**
+     *
+     * @param fields Список полей классов в иерархии наследования
+     * @return Возвращает строку заголовка для CSV файла
+     */
     private String getHeaderForWrite(List<Field> fields) {
         StringBuilder header = new StringBuilder();
         for (var field : fields) {
@@ -81,7 +89,14 @@ public class CSVWriterReflection implements CSVWriter {
         return header.toString();
     }
 
-    private String getStringForWriteLine(Object element, List<Field> fields) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    /**
+     *
+     * @param element Object для записи в файл
+     * @param fields Поля класса Object для записи в файл
+     * @return Возвращает строку, которая является представлением Object в классе
+     * @throws IllegalAccessException Ошибка доступа к полю
+     */
+    private String getStringForWriteLine(Object element, List<Field> fields) throws IllegalAccessException {
         StringBuilder result = new StringBuilder();
         for (var field : fields) {
             var annotation = field.getAnnotation(CSVField.class);
@@ -104,14 +119,21 @@ public class CSVWriterReflection implements CSVWriter {
         return result.toString();
     }
 
-    private void writeSequence(StringBuilder result, Object[] temp, List<Field> res) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    /**
+     *
+     * @param result StringBuilder для создания строки в файл
+     * @param temp Массив объектов
+     * @param fields Массив полей для записи
+     * @throws IllegalAccessException Ошибка доступа к полю класса
+     */
+    private void writeSequence(StringBuilder result, Object[] temp, List<Field> fields) throws IllegalAccessException {
         result.append("[ ");
         for (Object el : temp) {
-            if (res.isEmpty()) {
+            if (fields.isEmpty()) {
                 result.append(el.toString());
                 result.append(" ; ");
             } else {
-                result.append(getStringForWriteLine(el, res));
+                result.append(getStringForWriteLine(el, fields));
             }
 
         }
