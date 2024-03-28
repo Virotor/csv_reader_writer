@@ -3,21 +3,21 @@
   <groupId>com.lessons</groupId>
   <artifactId>csv_reader_writer</artifactId>
   <versioning>
-    <lastUpdated>20240328154811</lastUpdated>
+    <lastUpdated>20240328172519</lastUpdated>
     <snapshot>
-      <timestamp>20240328.154811</timestamp>
+      <timestamp>20240328.172519</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.0-20240328.154811-1</value>
-        <updated>20240328154811</updated>
+        <value>1.0-20240328.172519-1</value>
+        <updated>20240328172519</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.0-20240328.154811-1</value>
-        <updated>20240328154811</updated>
+        <value>1.0-20240328.172519-1</value>
+        <updated>20240328172519</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
