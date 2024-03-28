@@ -1,7 +1,6 @@
 import com.lessons.CSV.CSVWriterReflection;
 import com.lessons.classes.Animal;
 import com.lessons.classes.Description;
-import com.lessons.classes.LittleDog;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +12,10 @@ import java.util.List;
 import static org.junit.Assert.assertThrows;
 
 
-public class TestCSVWriter {
+public class TestCSVWriterException {
 
     List<Animal> animals;
 
-    List<LittleDog> littleDogs;
 
     @Before
     public void before() {
@@ -32,11 +30,6 @@ public class TestCSVWriter {
                 new Animal(10, "Tom", "Belarus", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
                 new Animal(10, "Tom", "Belarus", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")));
 
-       littleDogs = List.of(
-                new LittleDog("black", 11, "Tom", "Minsk", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
-                new LittleDog("white", 13, "Tobby", "Moscow", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
-                new LittleDog("red", 1132, "Alex", "Grodno", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
-                new LittleDog("grey", 124214, "Momas", "Petersburg", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")));
     }
 
     @After
@@ -44,11 +37,13 @@ public class TestCSVWriter {
 
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test(expected = NullPointerException.class)
     public void testNullPointerCollectionException() throws IOException {
         new CSVWriterReflection().writeToFile(null, "file.csv");
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Test(expected = NullPointerException.class)
     public void testNullPointerFileNameException() throws IOException {
         new CSVWriterReflection().writeToFile(animals, null);
@@ -67,5 +62,6 @@ public class TestCSVWriter {
                 () -> new CSVWriterReflection().writeToFile(new ArrayList<Animal>(), "src/test/resources/file.csv")
         );
     }
+
 
 }

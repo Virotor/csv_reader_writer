@@ -33,7 +33,7 @@ public class CSVWriterReflection implements CSVWriter {
             fileOutputStream.write(header.getBytes(), 0, header.length());
             for (var element : data) {
                 StringBuilder result = new StringBuilder(getStringForWriteLine(element, fields));
-                result.replace(result.length() - 3, result.length(), "\n");
+                result.replace(result.lastIndexOf(" ; "), result.length(), "\n");
                 fileOutputStream.write(result.toString().getBytes(), 0, result.length());
             }
         } catch (IllegalAccessException e) {
@@ -97,8 +97,9 @@ public class CSVWriterReflection implements CSVWriter {
                 result.append(getStringForWriteLine(field.get(element), getFieldsForWrite(field.getType())));
             } else {
                 result.append(field.get(element));
+                result.append(" ; ");
             }
-            result.append(" ; ");
+
         }
         return result.toString();
     }
@@ -106,11 +107,18 @@ public class CSVWriterReflection implements CSVWriter {
     private void writeSequence(StringBuilder result, Object[] temp, List<Field> res) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         result.append("[ ");
         for (Object el : temp) {
-            result.append(getStringForWriteLine(el, res));
+            if (res.isEmpty()) {
+                result.append(el.toString());
+                result.append(" ; ");
+            } else {
+                result.append(getStringForWriteLine(el, res));
+            }
+
         }
         result.deleteCharAt(result.length() - 1);
         result.deleteCharAt(result.length() - 1);
         result.deleteCharAt(result.length() - 1);
         result.append(" ]");
+        result.append(" ; ");
     }
 }

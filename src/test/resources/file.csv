@@ -1,0 +1,5 @@
+name ; age ; names ; amounts ; testRecordsText ; testRecordText
+Jon ; 17 ; [ Names ; Names ] ; [ 1 ; 2 ; 4 ] ; [ SampleText ; Text ; Sample ] ; 1
+Victor ; 19 ; [ Me ; Papa ] ; [ 1 ; 2 ; 5 ; 6 ; 6 ] ; [ SampleText ; Text ; Sample ] ; 2
+Marry ; 25 ; [ Yours ; Mama ] ; [ 4 ; 5 ; 5 ; 6 ; 6 ] ; [ SampleText ; Text ; Sample ] ; 3
+Olga ; 12 ; [ Names ; Values ] ; [ 1 ; 2 ; 6 ; 6 ] ; [ SampleText ; Text ; Sample ] ; 4
