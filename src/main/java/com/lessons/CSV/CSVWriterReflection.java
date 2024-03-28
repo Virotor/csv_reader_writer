@@ -41,11 +41,11 @@ public class CSVWriterReflection implements CSVWriter {
 
     private List<Field> getFieldsForWrite(Collection<?> data) {
         var topLevelClass = getParamitrClass(data);
-        List<Class> classes = new ArrayList<>(10);
+        List<Class<?>> classes = new ArrayList<>(10);
         classes.add(topLevelClass);
         while (true) {
             var temp = classes.getLast().getSuperclass();
-            if (Arrays.stream(temp.getDeclaredAnnotations()).noneMatch(e -> e.annotationType().equals(CSVData.class))) {
+            if (Arrays.stream(temp.getAnnotations()).noneMatch(e -> e.annotationType().equals(CSVData.class))) {
                 break;
             }
             classes.add(temp);
@@ -55,7 +55,7 @@ public class CSVWriterReflection implements CSVWriter {
                 flatMap(clazz ->
                         Arrays.stream(clazz.getDeclaredFields()).
                                 filter(
-                                        e -> e.isAnnotationPresent(CSVAnnotation.class)))
+                                        e -> e.isAnnotationPresent(CSVField.class)))
                 .toList();
     }
 
@@ -67,10 +67,15 @@ public class CSVWriterReflection implements CSVWriter {
         StringBuilder header = new StringBuilder();
         for (var field : fields) {
             field.setAccessible(true);
-            header.append(field.getDeclaredAnnotation(CSVAnnotation.class).key());
-            header.append(";");
+            String temp = field.getDeclaredAnnotation(CSVField.class).key();
+            if(temp.isEmpty()){
+                header.append(field.getName());
+            }else{
+                header.append(temp);
+            }
+            header.append(" ; ");
         }
-        header.replace(header.length() - 1, header.length(), "\n");
+        header.replace(header.length() - 3, header.length(), "\n");
         return header.toString();
     }
 
@@ -78,9 +83,9 @@ public class CSVWriterReflection implements CSVWriter {
         StringBuilder result = new StringBuilder();
         for (var field : fields) {
             result.append(field.get(element).toString());
-            result.append(";");
+            result.append(" ; ");
         }
-        result.replace(result.length() - 1, result.length(), "\n");
+        result.replace(result.length() - 3, result.length(), "\n");
         return result.toString();
     }
 }

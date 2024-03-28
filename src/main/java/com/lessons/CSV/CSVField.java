@@ -1,10 +1,11 @@
 package com.lessons.CSV;
 
-
 import java.lang.annotation.*;
 
-@Inherited
+
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface CSVData {
+@Target(ElementType.FIELD)
+public @interface CSVField {
+    String key() default  "";
+    
 }

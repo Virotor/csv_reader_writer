@@ -1,5 +1,5 @@
-color;age;name;area
-black;11;Tom;Minsk
-white;13;Tobby;Moscow
-red;1132;Alex;Grodno
-grey;124214;Momas;Petersburg
+color ; name ; area
+black ; Tom ; Minsk
+white ; Tobby ; Moscow
+red ; Alex ; Grodno
+grey ; Momas ; Petersburg
