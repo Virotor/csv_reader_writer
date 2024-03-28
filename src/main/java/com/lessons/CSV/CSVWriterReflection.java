@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,7 +24,7 @@ public class CSVWriterReflection implements CSVWriter {
         if (data.isEmpty()) {
             throw new IllegalArgumentException("Empty collection");
         }
-        List<Field> fields = getFieldsForWrite(data);
+        List<Field> fields = getFieldsForWrite(getParamitrClass(data));
         if (fields.isEmpty()) {
             throw new IllegalArgumentException("Not field for write");
         }
@@ -31,18 +32,20 @@ public class CSVWriterReflection implements CSVWriter {
             String header = getHeaderForWrite(fields);
             fileOutputStream.write(header.getBytes(), 0, header.length());
             for (var element : data) {
-                String result = getStringForWriteLine(element, fields);
-                fileOutputStream.write(result.getBytes(), 0, result.length());
+                StringBuilder result = new StringBuilder(getStringForWriteLine(element, fields));
+                result.replace(result.length() - 3, result.length(), "\n");
+                fileOutputStream.write(result.toString().getBytes(), 0, result.length());
             }
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e.getMessage());
+        } catch (InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private List<Field> getFieldsForWrite(Collection<?> data) {
-        var topLevelClass = getParamitrClass(data);
+    private List<Field> getFieldsForWrite(Class<?> childClass) {
         List<Class<?>> classes = new ArrayList<>(10);
-        classes.add(topLevelClass);
+        classes.add(childClass);
         while (true) {
             var temp = classes.getLast().getSuperclass();
             if (Arrays.stream(temp.getAnnotations()).noneMatch(e -> e.annotationType().equals(CSVData.class))) {
@@ -52,10 +55,10 @@ public class CSVWriterReflection implements CSVWriter {
 
         }
         return classes.stream().
-                flatMap(clazz ->
-                        Arrays.stream(clazz.getDeclaredFields()).
-                                filter(
-                                        e -> e.isAnnotationPresent(CSVField.class)))
+                flatMap(clazz -> Arrays.stream(clazz.getDeclaredFields()).
+                        filter(
+                                e -> e.isAnnotationPresent(CSVField.class)))
+                .peek(e -> e.setAccessible(true))
                 .toList();
     }
 
@@ -66,11 +69,10 @@ public class CSVWriterReflection implements CSVWriter {
     private String getHeaderForWrite(List<Field> fields) {
         StringBuilder header = new StringBuilder();
         for (var field : fields) {
-            field.setAccessible(true);
             String temp = field.getDeclaredAnnotation(CSVField.class).key();
-            if(temp.isEmpty()){
+            if (temp.isEmpty()) {
                 header.append(field.getName());
-            }else{
+            } else {
                 header.append(temp);
             }
             header.append(" ; ");
@@ -79,13 +81,36 @@ public class CSVWriterReflection implements CSVWriter {
         return header.toString();
     }
 
-    private String getStringForWriteLine(Object element, List<Field> fields) throws IllegalAccessException {
+    private String getStringForWriteLine(Object element, List<Field> fields) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         StringBuilder result = new StringBuilder();
         for (var field : fields) {
-            result.append(field.get(element).toString());
+            var annotation = field.getAnnotation(CSVField.class);
+            if (annotation.isCollection() && !field.getType().isArray()) {
+                var elementList = (List<?>) field.get(element);
+                var resField = getFieldsForWrite(annotation.type());
+                writeSequence(result, elementList.toArray(), resField);
+            } else if (field.getType().isArray()) {
+                var res = getFieldsForWrite(field.getType().getComponentType());
+                var temp = (Object[]) field.get(element);
+                writeSequence(result, temp, res);
+            } else if (field.getType().isAnnotationPresent(CSVData.class)) {
+                result.append(getStringForWriteLine(field.get(element), getFieldsForWrite(field.getType())));
+            } else {
+                result.append(field.get(element));
+            }
             result.append(" ; ");
         }
-        result.replace(result.length() - 3, result.length(), "\n");
         return result.toString();
+    }
+
+    private void writeSequence(StringBuilder result, Object[] temp, List<Field> res) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        result.append("[ ");
+        for (Object el : temp) {
+            result.append(getStringForWriteLine(el, res));
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.deleteCharAt(result.length() - 1);
+        result.deleteCharAt(result.length() - 1);
+        result.append(" ]");
     }
 }

@@ -16,25 +16,24 @@ import java.util.List;
 public class Animal implements CsvContent {
 
 
+    @CSVField
     private int age;
-    @CSVField(key = "name")
+    @CSVField(key = "name", type = String.class)
     private String name;
-    @CSVField(key = "area")
+    @CSVField(key = "area", type = String.class)
     private String area;
 
+    @CSVField(type = Description.class, collectionClass = List.class, isCollection = true)
+    private List<Description> descriptionList;
 
-    private List<MyClass> myClass;
 
-    @CSVData
-    @Data
-    @AllArgsConstructor
-    public static class MyClass{
-        private String text;
-        @Override
-        public  String toString(){
-            return text;
-        }
-    }
+    @CSVField(key = "descriptionArray", type = Description.class)
+    private Description[] descriptionArray;
+
+
+    @CSVField(type = Description.class)
+    private Description description;
+
 
 
     @Override

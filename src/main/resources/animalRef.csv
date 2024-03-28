@@ -1,5 +1,5 @@
-name ; area
-Tom ; Belarus
-Tom ; Belarus
-Tom ; Belarus
-Tom ; Belarus
+age ; name ; area ; descriptionList ; descriptionArray ; description
+10 ; Tom ; Belarus ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
+10 ; Tom ; Belarus ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
+10 ; Tom ; Belarus ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
+10 ; Tom ; Belarus ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 

@@ -1,12 +1,11 @@
 import com.lessons.CSV.CSVWriterReflection;
 import com.lessons.classes.Animal;
-import com.lessons.classes.Dog;
+import com.lessons.classes.Description;
 import com.lessons.classes.LittleDog;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,36 +17,26 @@ public class TestCSVWriter {
 
     List<Animal> animals;
 
-    List<Dog> dogs;
-
     List<LittleDog> littleDogs;
 
     @Before
     public void before() {
-        List<Animal.MyClass> myClasses = List.of(
-                new Animal.MyClass("E"),
-                new Animal.MyClass("S"),
-                new Animal.MyClass("T")
+        List<Description> descriptionList = List.of(
+                new Description("E"),
+                new Description("S"),
+                new Description("T")
         );
+       animals = List.of(
+                new Animal(10, "Tom", "Belarus", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
+                new Animal(10, "Tom", "Belarus", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
+                new Animal(10, "Tom", "Belarus", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
+                new Animal(10, "Tom", "Belarus", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")));
 
-        animals = List.of(new Animal(123, "Brown", "Minsk", myClasses),
-                new Animal(123, "Jessika", "Moscow", myClasses),
-                new Animal(1220, "Tom", "SpPetersburg", myClasses),
-                new Animal(10124, "Alex", "Grodno", myClasses),
-                new Animal(10141, "", "Russian", myClasses),
-                new Animal(10124, "Victor", "Belarus", myClasses),
-                new Animal(10124, "Olga", "Vitebsk", myClasses));
-
-
-        dogs = List.of(new Dog("black", 11, "Tom", "Minsk", myClasses),
-                new Dog("white", 13, "Tobby", "Moscow", myClasses),
-                new Dog("red", 1132, "Alex", "Grodno", myClasses),
-                new Dog("grey", 124214, "Momas", "Petersburg", myClasses));
-
-        littleDogs = List.of(new LittleDog("black", 11, "Tom", "Minsk", myClasses),
-                new LittleDog("white", 13, "Tobby", "Moscow", myClasses),
-                new LittleDog("red", 1132, "Alex", "Grodno", myClasses),
-                new LittleDog("grey", 124214, "Momas", "Petersburg", myClasses));
+       littleDogs = List.of(
+                new LittleDog("black", 11, "Tom", "Minsk", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
+                new LittleDog("white", 13, "Tobby", "Moscow", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
+                new LittleDog("red", 1132, "Alex", "Grodno", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")),
+                new LittleDog("grey", 124214, "Momas", "Petersburg", descriptionList, descriptionList.toArray(new Description[0]), new Description("E")));
     }
 
     @After

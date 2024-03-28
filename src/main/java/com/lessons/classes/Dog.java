@@ -2,7 +2,6 @@ package com.lessons.classes;
 
 
 import com.lessons.CSV.CSVField;
-import com.lessons.CSV.CSVData;
 import lombok.*;
 
 import java.util.List;
@@ -17,8 +16,8 @@ public class Dog extends  Animal{
     private String color;
 
 
-    public Dog(String color, int age, String name, String area, List<Animal.MyClass> myClasses){
-        super(age, name, area, myClasses);
+    public Dog(String color, int age, String name, String area, List<Description> descriptionList, Description[] descriptionArray, Description description){
+        super(age, name, area, descriptionList, descriptionArray, description);
         this.color = color;
     }
 }
