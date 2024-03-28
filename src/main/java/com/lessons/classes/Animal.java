@@ -1,17 +1,16 @@
 package com.lessons.classes;
 
 import com.lessons.CSV.CSVAnnotation;
-import com.lessons.CSV.CsvContent;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.lessons.CSV.CSVData;
+import com.lessons.CSVInterfaces.CsvContent;
+import lombok.*;
 
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@CSVData
 public class Animal implements CsvContent {
 
     @CSVAnnotation(key = "age")

@@ -1,8 +1,6 @@
-package com.lessons.CSV;
+package com.lessons.CSVInterfaces;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,13 +13,8 @@ import java.util.Collection;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Slf4j
-public class CSVWriterInterface  {
-
-    Collection<CsvContent> dataForWtire;
-
+public class CSVWriterInterface {
 
     public void writeToFile(Collection<CsvContent> data, String fileName) throws FileNotFoundException {
         File file = new File(fileName);

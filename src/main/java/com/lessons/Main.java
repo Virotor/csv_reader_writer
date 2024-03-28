@@ -1,21 +1,20 @@
 package com.lessons;
 
 import com.lessons.CSV.CSVWriterReflection;
+import com.lessons.CSVInterfaces.CsvContent;
 import com.lessons.classes.Animal;
-import com.lessons.CSV.CSVWriterInterface;
-import com.lessons.CSV.CsvContent;
 import com.lessons.classes.Dog;
+import com.lessons.classes.LittleDog;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-//        PropertyConfigurator.configure(Main.class.getResourceAsStream("log4j.properties"));
+    public static void main(String[] args) throws IOException {
+        //        PropertyConfigurator.configure(Main.class.getResourceAsStream("log4j.properties"));
 
 
-        List<CsvContent> animals = List.of(
+        List<Animal> animals = List.of(
                 new Animal(10, "Tom", "Belarus"),
                 new Animal(10, "Tom", "Belarus"),
                 new Animal(10, "Tom", "Belarus"),
@@ -23,11 +22,11 @@ public class Main {
         CSVWriterReflection csvWriterReflection = new CSVWriterReflection();
         csvWriterReflection.writeToFile(animals, "src/main/resources/animalRef.csv");
 
-        List<Dog> dogs = List.of(
-                new Dog("red", 10, "Tom", "Belarus"),
-                new Dog("red",10, "Tom", "Belarus"),
-                new Dog("red",10, "Tom", "Belarus"),
-                new Dog("red",10, "Tom", "Belarus"));
+        List<Animal> dogs = List.of(
+                new LittleDog("black", 11, "Tom", "Minsk"),
+                new LittleDog("white", 13, "Tobby", "Moscow"),
+                new LittleDog("red", 1132, "Alex", "Grodno"),
+                new LittleDog("grey", 124214, "Momas", "Petersburg"));
         csvWriterReflection = new CSVWriterReflection();
         csvWriterReflection.writeToFile(dogs, "src/main/resources/dogRef.csv");
     }

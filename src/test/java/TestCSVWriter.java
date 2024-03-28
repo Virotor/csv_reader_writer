@@ -1,20 +1,25 @@
 import com.lessons.CSV.CSVWriterReflection;
 import com.lessons.classes.Animal;
+import com.lessons.classes.Dog;
+import com.lessons.classes.LittleDog;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
 
 
 public class TestCSVWriter {
 
     List<Animal> animals;
+
+    List<Dog> dogs;
+
+    List<LittleDog> littleDogs;
 
     @Before
     public void before() {
@@ -25,6 +30,17 @@ public class TestCSVWriter {
                 new Animal(10141, "", "Russian"),
                 new Animal(10124, "Victor", "Belarus"),
                 new Animal(10124, "Olga", "Vitebsk"));
+
+
+        dogs = List.of(  new Dog("black", 11, "Tom", "Minsk"),
+                new Dog("white", 13, "Tobby", "Moscow"),
+                new Dog("red", 1132, "Alex", "Grodno"),
+                new Dog("grey", 124214, "Momas", "Petersburg"));
+
+        littleDogs = List.of(  new LittleDog("black", 11, "Tom", "Minsk"),
+                new LittleDog("white", 13, "Tobby", "Moscow"),
+                new LittleDog("red", 1132, "Alex", "Grodno"),
+                new LittleDog("grey", 124214, "Momas", "Petersburg"));
     }
 
     @After
@@ -33,17 +49,17 @@ public class TestCSVWriter {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testNullPointerCollectionCSVWriter() throws FileNotFoundException {
+    public void testNullPointerCollectionCSVWriter() throws IOException {
         new CSVWriterReflection().writeToFile(null, "file.csv");
     }
 
     @Test(expected = NullPointerException.class)
-    public void testNullPointerFileNameCSVWriter() throws FileNotFoundException {
+    public void testNullPointerFileNameCSVWriter() throws IOException {
         new CSVWriterReflection().writeToFile(animals, null);
     }
 
     @Test
     public void testFileNotFoundException() {
-        assertThrows(FileNotFoundException.class, () -> new CSVWriterReflection().writeToFile(animals, "file1.csv"));
+        assertThrows(IOException.class, () -> new CSVWriterReflection().writeToFile(animals, "file1.csv"));
     }
 }

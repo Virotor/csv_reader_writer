@@ -15,17 +15,17 @@ import java.util.List;
 public class CSVWriterReflection implements CSVWriter {
     @Override
     public void writeToFile(@NonNull Collection<?> data, @NonNull String fileName)
-            throws FileNotFoundException,
+            throws IOException,
             RuntimeException {
+        if (!(new File(fileName).isFile())) {
+            throw new FileNotFoundException(String.format("File with name %s not found", fileName));
+        }
         if (data.isEmpty()) {
-            throw new IllegalArgumentException("Size of collection is zero");
+            throw new IllegalArgumentException("Empty collection");
         }
         List<Field> fields = getFieldsForWrite(data);
         if (fields.isEmpty()) {
-            throw new RuntimeException("Not field for write");
-        }
-        if (!new File(fileName).isFile()) {
-            throw new FileNotFoundException(String.format("File with name %s not found", fileName));
+            throw new IllegalArgumentException("Not field for write");
         }
         try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
             String header = getHeaderForWrite(fields);
@@ -34,7 +34,7 @@ public class CSVWriterReflection implements CSVWriter {
                 String result = getStringForWriteLine(element, fields);
                 fileOutputStream.write(result.getBytes(), 0, result.length());
             }
-        } catch (IOException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -45,7 +45,7 @@ public class CSVWriterReflection implements CSVWriter {
         classes.add(topLevelClass);
         while (true) {
             var temp = classes.getLast().getSuperclass();
-            if (Arrays.stream(temp.getInterfaces()).noneMatch(e -> e.equals(CsvContent.class))) {
+            if (Arrays.stream(temp.getDeclaredAnnotations()).noneMatch(e -> e.annotationType().equals(CSVData.class))) {
                 break;
             }
             classes.add(temp);
