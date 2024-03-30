@@ -1,0 +1,16 @@
+
+<Configuration status="warn" name="xml_configuration">
+
+    <Appenders>
+        <Console name="consoleLogger" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="[%level] %m%n" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <Root level="error" additivity="false">
+            <appender-ref ref="consoleLogger" />
+        </Root>
+    </Loggers>
+</Configuration>

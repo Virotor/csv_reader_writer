@@ -8,9 +8,9 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface CSVData {
 
-    /*
-    // Определяет необходимо ли включить все поля класса в файл
-    //
+    /**
+     *
+     * @return Необходимо ли включать все поля класса в файл (Не используется)
      */
     boolean isAllField() default  false;
 }

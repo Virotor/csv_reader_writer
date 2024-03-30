@@ -1,5 +1,5 @@
 color ; age ; name ; area ; descriptionList ; descriptionArray ; description
-black ; 11 ; Tom ; Minsk ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
-white ; 13 ; Tobby ; Moscow ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
-red ; 1132 ; Alex ; Grodno ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
-grey ; 124214 ; Momas ; Petersburg ; [ E ; S ; T ] ; [ E ; S ; T ] ; E ; 
+black ; 11 ; Tom ; Minsk ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
+white ; 13 ; Tobby ; Moscow ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
+red ; 1132 ; Alex ; Grodno ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
+grey ; 124214 ; Momas ; Petersburg ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }

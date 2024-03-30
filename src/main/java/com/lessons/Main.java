@@ -1,5 +1,6 @@
 package com.lessons;
 
+import com.lessons.CSV.CSVWriter;
 import com.lessons.CSV.CSVWriterReflection;
 import com.lessons.classes.Animal;
 import com.lessons.classes.LittleDog;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        //        PropertyConfigurator.configure(Main.class.getResourceAsStream("log4j.properties"));
+        //        PropertyConfigurator.configure(Main.class.getResourceAsStream("log4j2.xml"));
 
         List<Description> myClasses = List.of(
                 new Description("E"),
@@ -22,7 +23,7 @@ public class Main {
                 new Animal(10, "Tom", "Belarus",myClasses, myClasses.toArray(new Description[0]), new Description("E")),
                 new Animal(10, "Tom", "Belarus",myClasses, myClasses.toArray(new Description[0]), new Description("E")),
                 new Animal(10, "Tom", "Belarus",myClasses, myClasses.toArray(new Description[0]), new Description("E")));
-        CSVWriterReflection csvWriterReflection = new CSVWriterReflection();
+        CSVWriter csvWriterReflection = new CSVWriterReflection();
         csvWriterReflection.writeToFile(animals, "src/main/resources/animalRef.csv");
 
         List<Animal> dogs = List.of(

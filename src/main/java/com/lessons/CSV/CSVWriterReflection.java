@@ -1,6 +1,8 @@
 package com.lessons.CSV;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
+
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -9,19 +11,28 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+
+
+@Slf4j
 public class CSVWriterReflection implements CSVWriter {
+
+
+
     @Override
     public void writeToFile(@NonNull Collection<?> data, @NonNull String fileName)
             throws IOException,
             IllegalArgumentException, NullPointerException {
         if (!(new File(fileName).isFile())) {
+            log.error(String.format("File with name %s not found", fileName));
             throw new FileNotFoundException(String.format("File with name %s not found", fileName));
         }
         if (data.isEmpty()) {
+            log.error("Empty collection. Can't write empty collection on file");
             throw new IllegalArgumentException("Empty collection");
         }
         List<Field> fields = getFieldsForWrite(getParamitrClass(data));
         if (fields.isEmpty()) {
+            log.error(String.format("In class %s not found fields for write", getParamitrClass(data)));
             throw new InvalidClassException("This object don't have field for write in CSV file");
         }
         try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
@@ -33,6 +44,7 @@ public class CSVWriterReflection implements CSVWriter {
                 fileOutputStream.write(result.toString().getBytes(), 0, result.length());
             }
         } catch (IllegalAccessException e) {
+            log.error(String.format("In class %s not access to get field", getParamitrClass(data)));
             throw new RuntimeException(e.getMessage(),e);
         }
     }

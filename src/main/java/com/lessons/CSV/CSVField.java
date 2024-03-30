@@ -8,14 +8,12 @@ import java.util.Collection;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface CSVField {
-
     /**
      *
      * name for csv name
      * default String.empty()
      *
      */
-
     String key() default  "";
     /**
      *
