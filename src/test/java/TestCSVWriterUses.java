@@ -56,8 +56,9 @@ public class TestCSVWriterUses {
                 stringBuilder.append(element);
                 stringBuilder.append(" ; ");
             }
-            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "] ; ");
+            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "] ; { ");
             stringBuilder.append(testRecordText);
+            stringBuilder.append(" }");
             return stringBuilder.toString();
         }
     }
@@ -65,13 +66,15 @@ public class TestCSVWriterUses {
     @CSVData
     record TestRecordText(
             @CSVField
-            String text
+            String text,
 
+            @CSVField
+            String text2
 
     ) {
         @Override
         public String toString() {
-            return text;
+            return text + " ; "  + text2;
         }
     }
 
@@ -79,15 +82,15 @@ public class TestCSVWriterUses {
     @Before
     public void before() throws IOException {
         List<TestRecordText> descriptionList = List.of(
-                new TestRecordText("SampleText"),
-                new TestRecordText("Text"),
-                new TestRecordText("Sample")
+                new TestRecordText("SampleText", "Uses"),
+                new TestRecordText("Text", "Uses"),
+                new TestRecordText("Sample", "Uses")
         );
         testRecords = List.of(
-                new TestRecord("Jon", 17, new String[]{"Names", "Names"}, List.of(1, 2, 4), descriptionList, new TestRecordText("1")),
-                new TestRecord("Victor", 19, new String[]{"Me", "Papa"}, List.of(1, 2, 5, 6, 6), descriptionList, new TestRecordText("2")),
-                new TestRecord("Marry", 25, new String[]{"Yours", "Mama"}, List.of(4, 5, 5, 6, 6), descriptionList, new TestRecordText("3")),
-                new TestRecord("Olga", 12, new String[]{"Names", "Values"}, List.of(1, 2, 6, 6), descriptionList, new TestRecordText("4"))
+                new TestRecord("Jon", 17, new String[]{"Names", "Names"}, List.of(1, 2, 4), descriptionList, new TestRecordText("1", "2")),
+                new TestRecord("Victor", 19, new String[]{"Me", "Papa"}, List.of(1, 2, 5, 6, 6), descriptionList, new TestRecordText("2", "3")),
+                new TestRecord("Marry", 25, new String[]{"Yours", "Mama"}, List.of(4, 5, 5, 6, 6), descriptionList, new TestRecordText("3", "4")),
+                new TestRecord("Olga", 12, new String[]{"Names", "Values"}, List.of(1, 2, 6, 6), descriptionList, new TestRecordText("4", "5"))
         );
         exceptedHeader = "name ; age ; names ; amounts ; testRecordsText ; testRecordText";
         exceptedContent = testRecords.stream().map(TestRecord::toString).reduce((a,b) -> a+'\n'+b).get();

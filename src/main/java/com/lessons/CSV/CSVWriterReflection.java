@@ -2,12 +2,8 @@ package com.lessons.CSV;
 
 import lombok.NonNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,7 +13,7 @@ public class CSVWriterReflection implements CSVWriter {
     @Override
     public void writeToFile(@NonNull Collection<?> data, @NonNull String fileName)
             throws IOException,
-            RuntimeException {
+            IllegalArgumentException, NullPointerException {
         if (!(new File(fileName).isFile())) {
             throw new FileNotFoundException(String.format("File with name %s not found", fileName));
         }
@@ -26,7 +22,7 @@ public class CSVWriterReflection implements CSVWriter {
         }
         List<Field> fields = getFieldsForWrite(getParamitrClass(data));
         if (fields.isEmpty()) {
-            throw new IllegalArgumentException("Not field for write");
+            throw new InvalidClassException("This object don't have field for write in CSV file");
         }
         try (FileOutputStream fileOutputStream = new FileOutputStream(fileName)) {
             String header = getHeaderForWrite(fields);
@@ -37,13 +33,13 @@ public class CSVWriterReflection implements CSVWriter {
                 fileOutputStream.write(result.toString().getBytes(), 0, result.length());
             }
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e.getMessage(),e);
         }
     }
 
     /**
      *
-     * @param childClass класс, который явялется
+     * @param childClass класс, который явялется потомком в иерархии наследования
      * @return Возвращает поля классов, которые помечены @CSVField всех классов в иерархии наследования
      */
     private List<Field> getFieldsForWrite(Class<?> childClass) {
@@ -109,7 +105,9 @@ public class CSVWriterReflection implements CSVWriter {
                 var temp = (Object[]) field.get(element);
                 writeSequence(result, temp, res);
             } else if (field.getType().isAnnotationPresent(CSVData.class)) {
+                result.append("{ ");
                 result.append(getStringForWriteLine(field.get(element), getFieldsForWrite(field.getType())));
+                result.replace(result.lastIndexOf(";"), result.length(),"} ; ");
             } else {
                 result.append(field.get(element));
                 result.append(" ; ");
@@ -137,10 +135,6 @@ public class CSVWriterReflection implements CSVWriter {
             }
 
         }
-        result.deleteCharAt(result.length() - 1);
-        result.deleteCharAt(result.length() - 1);
-        result.deleteCharAt(result.length() - 1);
-        result.append(" ]");
-        result.append(" ; ");
+        result.replace(result.lastIndexOf(";"), result.length(), "] ; ");
     }
 }
