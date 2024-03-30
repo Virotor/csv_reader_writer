@@ -3,69 +3,92 @@
 1. [Способы работы](#title1)
 2. [Известные проблемы](#title2)
 3. [Описание интерфейсов](#title3)
-   - [CSVWriter](#title3-1)
-   - [СSVContent](#title3-2)
+    - [CSVWriter](#title3-1)
+    - [СSVContent](#title3-2)
 4. [Описание аннотаций](#title4)
-   - [@CSVData](#title4-1)
-   - [@CSVField](#title4-2)
+    - [@CSVData](#title4-1)
+    - [@CSVField](#title4-2)
 5. [Примеры использования](#title5)  
-   -[Примеры использования аннотаций](#title5-1)  
-   -[Примеры использования CSVWriterReflection](#title5-2)  
+   - [Примеры использования аннотаций](#title5-1)  
+   - [Примеры использования CSVWriterReflection](#title5-2)
+   - [Подлючение](#title5-3)
 
 ## <a id="title1"> Способы взаимодействия </a>
 
 Для записи в файл используется два варианта
-- Реализация интерфейса `CSVContent`.  Метод `toCSVFile()` возвращает строку для записи в CSV-файле
+
+- Реализация интерфейса `CSVContent`. Метод `toCSVFile()` возвращает строку для записи в CSV-файле
 - Механизм рефлексии и использование аннотаций `@CSVData` и `@CSVField`
 
 ## <a id="title2"> Известные проблемы </a>
 
 Проблемы, которые есть на данный момент в классе:
+
 - Запись Коллекций, которые не унаследованы от `Collection`
 - Запись в файл _параметризированных _ объектов
-- Запись в файл **пустых коллекций** (Выкидывается `Exception`, хотя по логике работы, должна происходить запись заголовка)
-- Запись в файл полей, которые помечены как `@CSVField`, но не имеют перегруженного метода `toString()` для корректного строкового предоставления
+- Запись в файл **пустых коллекций** (Выкидывается `Exception`, хотя по логике работы, должна происходить запись
+  заголовка)
+- Запись в файл полей, которые помечены как `@CSVField`, но не имеют перегруженного метода `toString()` для корректного
+  строкового предоставления
+
 ## <a id ="title3"> Описание интерфейсов </a>
+
 Далее описаны интерфесы, которые используются для работы
+
 ### <a id ="title3-1"> CSVWriter </a>
+
 Определяет интерфейс, который является общим для всех классов, которые работают с CSV-файлами
+
 ```java
-   /**
-     *
-     * @param data  данные которые необходимо записать в файл (@NonNull)
-     * @param fileName  название файла (@NonNull)
-     * @throws IOException  если файла не существует, будет выброшенно исключение
-     * @throws RuntimeException  ошибка вызванные в результате работы с ReflectionAPI*
-     */
-    void writeToFile(@NonNull Collection<?> data, @NonNull String fileName) throws IOException, RuntimeException;
+
+/**
+ *
+ * @param data  данные которые необходимо записать в файл (@NonNull)
+ * @param fileName  название файла (@NonNull)
+ * @throws IOException  если файла не существует, будет выброшенно исключение
+ * @throws RuntimeException  ошибка вызванные в результате работы с ReflectionAPI*
+ */
+void writeToFile(@NonNull Collection<?> data, @NonNull String fileName) throws IOException, RuntimeException;
 ```
+
 ### <a id ="title3-2"> СSVContent </a>
+
 Определяет интерфейс, который определяет классы с методом для записи в CSV-файл
+
 ```java
-   /**
-    *
-    * @return Строковое представление класса для записи в CSVFile
-    */
-   String toCSVFile();
+
+/**
+ *
+ * @return Строковое представление класса для записи в CSVFile
+ */
+String toCSVFile();
 ```
+
 ## <a id ="title4"> Описание аннотаций </a>
+
 Аннотации для записи в файл
+
 ### <a id ="title4-1"> @CSVData </a>
+
 ```java
+
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface CSVData {
 
-   /**
-    *
-    * @return Необходимо ли включать все поля класса в файл (Не используется)
-    */
-   boolean isAllField() default  false;
+    /**
+     *
+     * @return Необходимо ли включать все поля класса в файл (Не используется)
+     */
+    boolean isAllField() default false;
 }
 ```
+
 ### <a id ="title4-2"> @CSVField </a>
+
 ```java
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface CSVField {
@@ -75,20 +98,23 @@ public @interface CSVField {
      * default String.empty()
      *
      */
-    String key() default  "";
+    String key() default "";
+
     /**
      *
      * Class of object, необходим, чтобы ускорить получение класса у колекции
      *
      */
-    Class<?> type() default  Object.class;
+    Class<?> type() default Object.class;
+
     /**
      *
      * Опрделеяет, явялется ли поле в классе Коллекцией
      * если false использует реализацию Object toString()
      *
      */
-    boolean isCollection() default  false;
+    boolean isCollection() default false;
+
     /**
      *
      *Задаёт класс коллекции для isCollection()
@@ -97,11 +123,13 @@ public @interface CSVField {
     Class<?> collectionClass() default Collection.class;
 }
 ```
+
 ## <a id="title5"> Примеры использования </a>
 
 ### <a id="title5-1"> Примеры использования аннотаций </a>
 
 ```java  
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -120,41 +148,47 @@ public class Animal implements CSVContent {
     private Description[] descriptionArray;
     @CSVField(type = Description.class)
     private Description description;
+
     @Override
     public String toCSVFile() {
         return String.format("%s;%s;%d\n", name, area, age);
     }
 }
 ```
+
 ```java
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Dog extends  Animal{
+public class Dog extends Animal {
 
     @CSVField()
     private String color;
 
 
-    public Dog(String color, int age, String name, String area, List<Description> descriptionList, Description[] descriptionArray, Description description){
+    public Dog(String color, int age, String name, String area, List<Description> descriptionList, Description[] descriptionArray, Description description) {
         super(age, name, area, descriptionList, descriptionArray, description);
         this.color = color;
     }
 }
 ```
+
 ```java
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class LittleDog extends  Dog {
+public class LittleDog extends Dog {
     @Builder
-    public LittleDog(String color, int age, String name, String area, List<Description> descriptionList, Description[] descriptionArray, Description description){
+    public LittleDog(String color, int age, String name, String area, List<Description> descriptionList, Description[] descriptionArray, Description description) {
         super(color, age, name, area, descriptionList, descriptionArray, description);
     }
 }
 
 ```
+
 ### <a id="title5-1"> Примеры использования CSVWriterReflection </a>
 
 ```java  
@@ -164,14 +198,17 @@ public class LittleDog extends  Dog {
         new Description("T")
 );
 List<Animal> littleDogs = List.of(
-        new LittleDog("black", 11, "Tom", "Minsk",myClasses, myClasses.toArray(new Description[0]), new Description("E")),
-        new LittleDog("white", 13, "Tobby", "Moscow",myClasses, myClasses.toArray(new Description[0]), new Description("E")),
-        new LittleDog("red", 1132, "Alex", "Grodno",myClasses, myClasses.toArray(new Description[0]), new Description("E")),
-        new LittleDog("grey", 124214, "Momas", "Petersburg",myClasses, myClasses.toArray(new Description[0]), new Description("E"))
-        );
+        new LittleDog("black", 11, "Tom", "Minsk", myClasses, myClasses.toArray(new Description[0]), new Description("E")),
+        new LittleDog("white", 13, "Tobby", "Moscow", myClasses, myClasses.toArray(new Description[0]), new Description("E")),
+        new LittleDog("red", 1132, "Alex", "Grodno", myClasses, myClasses.toArray(new Description[0]), new Description("E")),
+        new LittleDog("grey", 124214, "Momas", "Petersburg", myClasses, myClasses.toArray(new Description[0]), new Description("E"))
+);
 CSVWriter csvWriter = new CSVWriterReflection(); 
-csvWriter.writeToFile(littleDogs, "file.csv");  
+csvWriter.
+
+writeToFile(littleDogs, "file.csv");  
 ```
+
 Результат вывода
 
 ```
@@ -180,4 +217,26 @@ black ; 11 ; Tom ; Minsk ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
 white ; 13 ; Tobby ; Moscow ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
 red ; 1132 ; Alex ; Grodno ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
 grey ; 124214 ; Momas ; Petersburg ; [ E ; S ; T ] ; [ E ; S ; T ] ; { E }
+```
+### <a id="title5-3"> Подлючение </a>
+
+``` xml
+ <repositories>
+     <repository>
+        <id>csv_reader_writer-mvn-repo</id>
+        <url>https://raw.github.com/Virotor/csv_reader_writer/mvn-repo/</url>
+          <snapshots>
+             <enabled>true</enabled>
+             <updatePolicy>always</updatePolicy>
+          </snapshots>
+    </repository>
+ </repositories>
+```
+
+``` xml
+ <dependency>
+     <groupId>com.lessons</groupId>
+     <artifactId>csv_reader_writer</artifactId>
+     <version>1.0-SNAPSHOT</version>
+ </dependency>
 ```
